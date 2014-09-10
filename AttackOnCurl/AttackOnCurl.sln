@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttackOnCurl", "AttackOnCurl\AttackOnCurl.csproj", "{587FC5E0-59C4-495B-B06A-165CC16431E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttackOnCurl.Gui", "AttackOnCurl.Gui\AttackOnCurl.Gui.csproj", "{62BF0039-DD6A-4FF0-ACBA-3BAF0C8F226B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{587FC5E0-59C4-495B-B06A-165CC16431E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{587FC5E0-59C4-495B-B06A-165CC16431E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{587FC5E0-59C4-495B-B06A-165CC16431E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62BF0039-DD6A-4FF0-ACBA-3BAF0C8F226B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62BF0039-DD6A-4FF0-ACBA-3BAF0C8F226B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62BF0039-DD6A-4FF0-ACBA-3BAF0C8F226B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62BF0039-DD6A-4FF0-ACBA-3BAF0C8F226B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
