@@ -97,7 +97,7 @@
             this.filePathTextBox.Name = "filePathTextBox";
             this.filePathTextBox.Size = new System.Drawing.Size(199, 20);
             this.filePathTextBox.TabIndex = 4;
-            this.filePathTextBox.Text = "D:\\FTP\\Comics\\attack-on-titan";
+            this.filePathTextBox.Text = "D:\\Comics\\attack-on-titan";
             // 
             // filePathLabel
             // 
