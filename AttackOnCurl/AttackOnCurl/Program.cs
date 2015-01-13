@@ -14,11 +14,11 @@ namespace AttackOnCurl
     class Program
     {
         static string baseUrl = "http://www.mangareader.net";
-        static string baseFileLocation = @"D:\FTP\Comics\attack-on-titan-birth-of-levi";
-        static string baseUrlPath = "shingeki-no-kyojin-birth-of-levi-kuinaki-sentaku";
-        static string outputFileNameFormat = "Attack On Titan Birth of Levi";
-        static int startNumber = 9;
-        static int endNumber = 9;
+        static string baseFileLocation = @"D:\FTP\Comics\attack-on-titan";
+        static string baseUrlPath = "shingeki-no-kyojin";
+        static string outputFileNameFormat = "Attack On Titan";
+        static int startNumber = 65;
+        static int endNumber = 65;
         //static TimeSpan waitTime = new TimeSpan(0, 0, 3);
 
         static void Main(string[] args)
@@ -35,7 +35,8 @@ namespace AttackOnCurl
 
                 List<string> childPages = new List<string>();
 
-                var request = WebRequest.Create(nextPage);
+                var request = (HttpWebRequest)WebRequest.Create(nextPage);
+                request.UserAgent = "Mozilla/5.0";
 
                 using (var response = request.GetResponse())
                 {
