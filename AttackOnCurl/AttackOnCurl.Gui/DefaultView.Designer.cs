@@ -31,8 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DefaultView));
             this.baseUrlLabel = new System.Windows.Forms.Label();
             this.baseUrlTextBox = new System.Windows.Forms.TextBox();
-            this.pathTextBox = new System.Windows.Forms.TextBox();
-            this.pathLabel = new System.Windows.Forms.Label();
             this.filePathTextBox = new System.Windows.Forms.TextBox();
             this.filePathLabel = new System.Windows.Forms.Label();
             this.fileNameTextBox = new System.Windows.Forms.TextBox();
@@ -68,26 +66,6 @@
             this.baseUrlTextBox.Name = "baseUrlTextBox";
             this.baseUrlTextBox.Size = new System.Drawing.Size(281, 20);
             this.baseUrlTextBox.TabIndex = 1;
-            this.baseUrlTextBox.Text = "http://www.mangareader.net";
-            // 
-            // pathTextBox
-            // 
-            this.pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pathTextBox.Location = new System.Drawing.Point(97, 33);
-            this.pathTextBox.Name = "pathTextBox";
-            this.pathTextBox.Size = new System.Drawing.Size(281, 20);
-            this.pathTextBox.TabIndex = 2;
-            this.pathTextBox.Text = "shingeki-no-kyojin";
-            // 
-            // pathLabel
-            // 
-            this.pathLabel.AutoSize = true;
-            this.pathLabel.Location = new System.Drawing.Point(27, 36);
-            this.pathLabel.Name = "pathLabel";
-            this.pathLabel.Size = new System.Drawing.Size(64, 13);
-            this.pathLabel.TabIndex = 3;
-            this.pathLabel.Text = "Comic Path:";
             // 
             // filePathTextBox
             // 
@@ -97,7 +75,7 @@
             this.filePathTextBox.Name = "filePathTextBox";
             this.filePathTextBox.Size = new System.Drawing.Size(199, 20);
             this.filePathTextBox.TabIndex = 4;
-            this.filePathTextBox.Text = "D:\\Comics\\attack-on-titan";
+            this.filePathTextBox.Text = "E:\\Comics\\attack-on-titan";
             // 
             // filePathLabel
             // 
@@ -257,8 +235,6 @@
             this.Controls.Add(this.fileNameTextBox);
             this.Controls.Add(this.filePathLabel);
             this.Controls.Add(this.filePathTextBox);
-            this.Controls.Add(this.pathLabel);
-            this.Controls.Add(this.pathTextBox);
             this.Controls.Add(this.baseUrlTextBox);
             this.Controls.Add(this.baseUrlLabel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -275,8 +251,6 @@
 
         private System.Windows.Forms.Label baseUrlLabel;
         private System.Windows.Forms.TextBox baseUrlTextBox;
-        private System.Windows.Forms.TextBox pathTextBox;
-        private System.Windows.Forms.Label pathLabel;
         private System.Windows.Forms.TextBox filePathTextBox;
         private System.Windows.Forms.Label filePathLabel;
         private System.Windows.Forms.TextBox fileNameTextBox;

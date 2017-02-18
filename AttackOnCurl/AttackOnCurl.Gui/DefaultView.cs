@@ -45,20 +45,6 @@ namespace AttackOnCurl.Gui
         }
 
         /// <summary>
-        /// Gets the base path.
-        /// </summary>
-        /// <value>
-        /// The base path.
-        /// </value>
-        private string BasePath
-        {
-            get
-            {
-                return pathTextBox.Text;
-            }
-        }
-
-        /// <summary>
         /// Gets the file path.
         /// </summary>
         /// <value>
@@ -156,7 +142,8 @@ namespace AttackOnCurl.Gui
 
                 string currentSaveLocation = string.Format("{0}\\{1}", FilePath, issueNumber);
                 System.IO.Directory.CreateDirectory(currentSaveLocation);
-                string nextPage = string.Format("{0}/{1}/{2}", BaseUrl, BasePath, i);
+                //string nextPage = string.Format("{0}/{1}/{2}", BaseUrl, BasePath, i);
+                string nextPage = BaseUrl;
                 int pageNumber = 1;
 
                 List<string> childPages = new List<string>();
@@ -164,41 +151,55 @@ namespace AttackOnCurl.Gui
                 var request = (HttpWebRequest)WebRequest.Create(nextPage);
                 request.UserAgent = "Mozilla/5.0";
 
-                using (var response = request.GetResponse())
+                bool tipUrl = false;
+
+                while(!tipUrl)
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    string nextUrl = GetAndSaveChildPage(nextPage, currentSaveLocation, pageNumber);
+                    pageNumber++;
+                    nextPage = nextUrl;
+
+                    if(nextUrl.EndsWith("tip") || nextUrl.EndsWith("/1"))
                     {
-                        string html = reader.ReadToEnd();
-
-                        HtmlNode bodyNode = GetHtmlBodyNode(html);
-
-                        //save first page
-                        string imageUrl = GetImageUrl(bodyNode);
-                        SavePage(imageUrl, currentSaveLocation, pageNumber);
-                        IncrementProgress();
-
-                        //System.Threading.Thread.Sleep(waitTime);
-                        pageNumber++;
-                        Console.WriteLine("");
-
-                        childPages = GetPagesFromSelectHtmlElement(bodyNode);
+                        tipUrl = true;
                     }
                 }
 
-                List<KeyValuePair<int, string>> numberedChildPages = new List<KeyValuePair<int, string>>();
-                foreach (var page in childPages)
-                {
-                    numberedChildPages.Add(new KeyValuePair<int, string>(pageNumber, page));
-                    pageNumber++;
-                }
+                //using (var response = request.GetResponse())
+                //{
+                //    using (var reader = new StreamReader(response.GetResponseStream()))
+                //    {
+                //        string html = reader.ReadToEnd();
 
-                currentPagesTotal = childPages.Count() + 1;
+                //        HtmlNode bodyNode = GetHtmlBodyNode(html);
 
-                Parallel.ForEach(numberedChildPages, kvp =>
-                {
-                    GetAndSaveChildPage(kvp.Value, currentSaveLocation, kvp.Key);
-                    IncrementProgress();
-                });
+                //        //save first page
+                //        string imageUrl = GetImageUrl(bodyNode);
+                //        SavePage(imageUrl, currentSaveLocation, pageNumber);
+                //        IncrementProgress();
+
+                //        //System.Threading.Thread.Sleep(waitTime);
+                //        pageNumber++;
+                //        Console.WriteLine("");
+
+                //        childPages = GetPagesFromSelectHtmlElement(bodyNode);
+                //    }
+                //}
+
+                //List<KeyValuePair<int, string>> numberedChildPages = new List<KeyValuePair<int, string>>();
+                //foreach (var page in childPages)
+                //{
+                //    numberedChildPages.Add(new KeyValuePair<int, string>(pageNumber, page));
+                //    pageNumber++;
+                //}
+
+                //currentPagesTotal = childPages.Count() + 1;
+
+                //Parallel.ForEach(numberedChildPages, kvp =>
+                //{
+                //    GetAndSaveChildPage(kvp.Value, currentSaveLocation, kvp.Key);
+                //    IncrementProgress();
+                //});
 
                 BuildCBZFile(currentSaveLocation, issueNumber);
                 System.IO.Directory.Delete(currentSaveLocation, true);
@@ -276,7 +277,7 @@ namespace AttackOnCurl.Gui
             ZipFile.CreateFromDirectory(location, destinationFile, CompressionLevel.Optimal, true);
         }
 
-        private void GetAndSaveChildPage(string pageUrl, string saveLocation, int pageNumber)
+        private string GetAndSaveChildPage(string pageUrl, string saveLocation, int pageNumber)
         {
             var request = WebRequest.Create(pageUrl);
 
@@ -293,6 +294,8 @@ namespace AttackOnCurl.Gui
 
                     string imageUrl = GetImageUrl(bodyNode);
                     SavePage(imageUrl, saveLocation, pageNumber);
+
+                    return GetNextUrl(bodyNode);
                 }
             }
         }
@@ -322,7 +325,7 @@ namespace AttackOnCurl.Gui
         {
             if (bodyNode != null)
             {
-                var imageElement = bodyNode.SelectNodes("//div[@id='imgholder']//a//img").FirstOrDefault();
+                var imageElement = bodyNode.SelectNodes("//img[@id='manga-page']").FirstOrDefault();
 
                 if (imageElement != null)
                 {
@@ -337,19 +340,38 @@ namespace AttackOnCurl.Gui
             return "";
         }
 
+        private string GetNextUrl(HtmlNode bodyNode)
+        {
+            if(bodyNode != null)
+            {
+                var aNode = bodyNode.SelectNodes("//div[@class='page']//a").FirstOrDefault();
+
+                if (aNode != null)
+                {
+                    if(aNode.HasAttributes)
+                    {
+                        string nextPageUrl = aNode.Attributes.Where(o => o.Name == "href").Select(o => o.Value).FirstOrDefault();
+                        return nextPageUrl;
+                    }
+                }
+            }
+
+            return "";
+        }
+
         private List<string> GetPagesFromSelectHtmlElement(HtmlNode bodyNode)
         {
             List<string> results = new List<string>();
 
-            var options = bodyNode.SelectNodes("//select[@id='pageMenu']//option");
+            var options = bodyNode.SelectNodes("//*[contains(@class,'btn-reader-page')]//ul//li");
 
             if (options != null)
             {
-                foreach (var option in options)
+                foreach (var option in options.Skip(1))
                 {
                     if (option.Attributes.Count() < 2)
                     {
-                        results.Add(string.Concat(BaseUrl, option.Attributes.Select(o => o.Value).FirstOrDefault()));
+                        results.Add(option.FirstChild.Attributes.Select(o => o.Value).FirstOrDefault());
                     }
                 }
             }
@@ -419,7 +441,6 @@ namespace AttackOnCurl.Gui
         private void DisableControls()
         {
             baseUrlTextBox.Enabled = false;
-            pathTextBox.Enabled = false;
             filePathTextBox.Enabled = false;
             saveFilePathSelectButton.Enabled = false;
             fileNameTextBox.Enabled = false;
@@ -435,7 +456,6 @@ namespace AttackOnCurl.Gui
         private void EnableControls()
         {
             baseUrlTextBox.Enabled = true;
-            pathTextBox.Enabled = true;
             filePathTextBox.Enabled = true;
             saveFilePathSelectButton.Enabled = true;
             fileNameTextBox.Enabled = true;
